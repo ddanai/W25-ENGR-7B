@@ -47,12 +47,21 @@ void trackObject() {
     // TODO: Check if an object is detected
     // HINT: Use `pixy.ccc.numBlocks` to check if at least one block is found
 
-    // TODO: If an object is detected:
+   // TODO: If an object is detected:
     //   - Get the object's x-coordinate (m_x) and width (m_width)
     //   - Compute the error between object_x and CENTER_X
     //   - Calculate turn speed using proportional control: abs(error) * Kp
     //   - Constrain the turn speed between MIN_SPEED and MAX_SPEED
 
+  if (pixy.ccc.numBlocks) {
+    int xCoordinate = pixy.ccc.blocks.m_x;
+    int width = pixy.ccc.blocks.m_width;
+    int error = xCoordinate - CENTER_X;
+    int turnSpeed =  Kp * abs(error);
+    int turnSpeed  = constrain(turnSpeed, MIN_SPEED, MAX_SPEED);
+  
+   
+  
     // TODO: Control the robot based on the object's position:
     //   - If the object is to the left, call `turnRight(turn_speed);`
     //   - If the object is to the right, call `turnLeft(turn_speed);`
@@ -61,6 +70,24 @@ void trackObject() {
     //       * If it's close enough, call `grabObject();`
     
     // TODO: If no object is detected, stop the motors.
+
+
+    if (error > TURN_THRESHOLD) {
+      turnLeft(turn_speed);
+
+    } else if( error < -TURN_THRESHOLD ) {
+      turnRight(turn_speed);
+    } else {
+      if (width < TARGET_WIDTH) {
+        moveForward(FORWARD_SPEED);
+      } else {
+        grabObject();
+      }
+    }
+  
+   } else {
+    stopMotors();
+    }
 }
 
 // Function to stop the robot and close the claw
@@ -68,27 +95,41 @@ void grabObject() {
     // TODO: Stop the motors before grabbing the object
     // TODO: Add a short delay before closing the claw
     // TODO: Close the claw by setting the correct servo angle
+     stopMotors();
+     delay(500);
+     claw.write(90);
+
+  
 }
 
 // Function to move forward
 void moveForward(int speed) {
     // TODO: Set the correct motor speeds so that the rover moves forward
     // HINT: One motor will move forward, and the other will move backward (because they are facing outward)
+    leftMotor.setSpeed(speed);
+    rightMotor.setSpeed(-speed);
+   
 }
 
 // Function to turn left
 void turnLeft(int speed) {
     // TODO: Set the motor speeds so that the rover turns left
     // HINT: Both motors will move in the same direction for turning
+    leftMotor.setSpeed(speed);
+    rightMotor.setSpeed(speed);
 }
 
 // Function to turn right
 void turnRight(int speed) {
     // TODO: Set the motor speeds so that the rover turns right
     // HINT: Both motors will move in the same direction for turning
+    leftMotor.setSpeed(-speed);
+    rightMotor.setSpeed(-speed);
 }
 
 // Function to stop motors
 void stopMotors() {
     // TODO: Set both motor speeds to zero
+    leftMotor.setSpeed(0);
+    rightMotor.setSpeed(0);
 }
