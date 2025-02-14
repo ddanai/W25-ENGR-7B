@@ -19,6 +19,7 @@ const int MAX_SPEED = 255;    // Maximum motor speed
 const int MIN_SPEED = 50;     // Minimum motor speed (ensures the robot moves instead of stalling)
 const int FORWARD_SPEED = 150; // Speed for moving forward when approaching the object
 const int TURN_THRESHOLD = 5; // How close the object must be to the center before moving forward
+const int clawClosePosition = 90; // closed position of claw
 
 void setup() {
     Serial.begin(115200);
@@ -43,7 +44,7 @@ void trackObject() {
   
   pixy.ccc.getBlocks();
 
-  if (pixy.ccc.numBlocks) {
+  if (pixy.ccc.numBlocks > 0) {
     int xCoordinate = pixy.ccc.blocks[0].m_x;
     int width = pixy.ccc.blocks[0].m_width;
     int error = xCoordinate - CENTER_X;
@@ -52,10 +53,10 @@ void trackObject() {
 
 
     if (error > TURN_THRESHOLD) {
-      turnLeft(turn_speed);
+      turnLeft(turnSpeed);
 
     } else if( error < -TURN_THRESHOLD ) {
-      turnRight(turn_speed);
+      turnRight(turnSpeed);
     } else {
       if (width < TARGET_WIDTH) {
         moveForward(FORWARD_SPEED);
