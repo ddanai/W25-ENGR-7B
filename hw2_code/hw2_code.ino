@@ -40,36 +40,15 @@ void loop() {
 
 // Function to track and approach an object using Pixy2
 void trackObject() {
+  
   pixy.ccc.getBlocks();
-    // TODO: Retrieve detected objects from Pixy2
-    // HINT: Use `pixy.ccc.getBlocks();` to get object data
-
-    // TODO: Check if an object is detected
-    // HINT: Use `pixy.ccc.numBlocks` to check if at least one block is found
-
-   // TODO: If an object is detected:
-    //   - Get the object's x-coordinate (m_x) and width (m_width)
-    //   - Compute the error between object_x and CENTER_X
-    //   - Calculate turn speed using proportional control: abs(error) * Kp
-    //   - Constrain the turn speed between MIN_SPEED and MAX_SPEED
 
   if (pixy.ccc.numBlocks) {
-    int xCoordinate = pixy.ccc.blocks.m_x;
-    int width = pixy.ccc.blocks.m_width;
+    int xCoordinate = pixy.ccc.blocks[0].m_x;
+    int width = pixy.ccc.blocks[0].m_width;
     int error = xCoordinate - CENTER_X;
     int turnSpeed =  Kp * abs(error);
-    int turnSpeed  = constrain(turnSpeed, MIN_SPEED, MAX_SPEED);
-  
-   
-  
-    // TODO: Control the robot based on the object's position:
-    //   - If the object is to the left, call `turnRight(turn_speed);`
-    //   - If the object is to the right, call `turnLeft(turn_speed);`
-    //   - If the object is centered:
-    //       * If it's far away, call `moveForward(FORWARD_SPEED);`
-    //       * If it's close enough, call `grabObject();`
-    
-    // TODO: If no object is detected, stop the motors.
+    turnSpeed  = constrain(turnSpeed, MIN_SPEED, MAX_SPEED);
 
 
     if (error > TURN_THRESHOLD) {
@@ -97,7 +76,7 @@ void grabObject() {
     // TODO: Close the claw by setting the correct servo angle
      stopMotors();
      delay(500);
-     claw.write(90);
+     claw.write(clawClosePosition);
 
   
 }
