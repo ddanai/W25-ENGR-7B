@@ -95,7 +95,7 @@ void moveForward(int speed) {
 void turnLeft(int speed) {
     // TODO: Set the motor speeds so that the rover turns left
     // HINT: Both motors will move in the same direction for turning
-    leftMotor.setSpeed(speed);
+    leftMotor.setSpeed(-speed);
     rightMotor.setSpeed(speed);
 }
 
@@ -103,7 +103,7 @@ void turnLeft(int speed) {
 void turnRight(int speed) {
     // TODO: Set the motor speeds so that the rover turns right
     // HINT: Both motors will move in the same direction for turning
-    leftMotor.setSpeed(-speed);
+    leftMotor.setSpeed(speed);
     rightMotor.setSpeed(-speed);
 }
 
