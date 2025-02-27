@@ -2,10 +2,10 @@
 #include <Servo.h>
 
 // Configure the motor driver.
-const int sensor1Pin = 2;   // Sensor 1 input pin
-const int sensor2Pin = 3;   // Sensor 2 input pin
-CytronMD motor1(PWM_DIR, 3, 4);  // PWM 1 = Pin 3, DIR 1 = Pin 4.
-CytronMD motor2(PWM_DIR, 6, 7); // PWM 2 = Pin 9, DIR 2 = Pin 10.
+const int sensor1Pin = 2;   // Sensor 1 input pin (left)
+const int sensor2Pin = 5;   // Sensor 2 input pin (right)
+CytronMD motor1(PWM_DIR, 3, 4);  // PWM 1 = Pin 3, DIR 1 = Pin 4
+CytronMD motor2(PWM_DIR, 6, 7); // PWM 2 = Pin 6, DIR 2 = Pin 7
 
 // =========== SERVOS ===========
 // 1) Claw servo: open/close
@@ -32,41 +32,31 @@ void setup() {
 }
 
 void loop() {
-  Switch(var){
-  Case 1: //line tracking 
-    linetracking();
-  break;
-  Case 2: //color detecting 
-  
-    colordetecting();
-  break;
-  Case 3 //claw actuation
-
-    clawactuation();
-  }
+linetracking();
 }
 
-
+//motor 1 (left) negative is forwards
+//motor 2 (right) positive is forwards
 void linetracking(){ 
   // Read sensor inputs
   int sensorLeftStatus = digitalRead(sensor1Pin);
   int sensorRightStatus = digitalRead(sensor2Pin);
   if (sensorLeftStatus == LOW && sensorRightStatus == LOW) {
-    motor1.setSpeed(150);  
-    motor2.setSpeed(150)
+    motor1.setSpeed(-200);  
+    motor2.setSpeed(200);
   } else if (sensorLeftStatus == LOW && sensorRightStatus == HIGH) {
-    motor1.setSpeed(0);
-    motor2.setSpeed(150)
+    motor1.setSpeed(-200);
+    motor2.setSpeed(-200);;
   } else if (sensorLeftStatus == HIGH && sensorRightStatus == LOW) {
-    motor1.setSpeed(150);
-    motor2.setSpeed(0)
+    motor1.setSpeed(200);
+    motor2.setSpeed(200);
   } else if (sensorLeftStatus == HIGH && sensorRightStatus == HIGH) {
     motor1.setSpeed(0);
-    motor2.setSpeed(0)
+    motor2.setSpeed(0);
     var=2;
   }
 }
-
+/*
 void moveForward(int speed) {
     // Because the right motor is physically reversed on the rover:
     //   - Left motor: positive = forward
@@ -97,4 +87,5 @@ void turnRight(int speed) {
 void stopMotors() {
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
-}
+}*/
+
