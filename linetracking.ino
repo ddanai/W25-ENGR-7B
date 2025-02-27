@@ -46,7 +46,7 @@ void linetracking(){
     motor2.setSpeed(200);
   } else if (sensorLeftStatus == LOW && sensorRightStatus == HIGH) {
     motor1.setSpeed(-200);
-    motor2.setSpeed(-200);;
+    motor2.setSpeed(-200);
   } else if (sensorLeftStatus == HIGH && sensorRightStatus == LOW) {
     motor1.setSpeed(200);
     motor2.setSpeed(200);
