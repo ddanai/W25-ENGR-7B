@@ -42,13 +42,13 @@ void linetracking(){
   int sensorLeftStatus = digitalRead(sensor1Pin);
   int sensorRightStatus = digitalRead(sensor2Pin);
   if (sensorLeftStatus == LOW && sensorRightStatus == LOW) {
-    motor1.setSpeed(-175);  
-    motor2.setSpeed(175);
+    motor1.setSpeed(-190);  
+    motor2.setSpeed(190);
   } else if (sensorLeftStatus == LOW && sensorRightStatus == HIGH) {
     motor1.setSpeed(-255);
-    motor2.setSpeed(20);
+    motor2.setSpeed(10);
   } else if (sensorLeftStatus == HIGH && sensorRightStatus == LOW) {
-    motor1.setSpeed(-20);
+    motor1.setSpeed(-10);
     motor2.setSpeed(255);
   } else if (sensorLeftStatus == HIGH && sensorRightStatus == HIGH) {
     motor1.setSpeed(0);
