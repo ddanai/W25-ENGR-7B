@@ -81,6 +81,7 @@ void trackObject() {
           //if object closer than target width stop motors 
           stopMotors();
           clawClose();
+          clawRaise();
           int var=3;
           } 
         
