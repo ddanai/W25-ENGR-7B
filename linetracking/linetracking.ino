@@ -15,8 +15,17 @@ CytronMD rightMotor(PWM_DIR, 6, 7); // PWM 2 = Pin 6, DIR 2 = Pin 7
 Servo clawServo;
 Servo liftServo;
 
+//Constants for line tracking/lifting
 const int clawServoPin = 10; // claw servo input pin     
-const int liftServoPin = 9; // lift servo input pin         
+const int liftServoPin = 9; // lift servo input pin
+
+// Constants for color tracking
+const int CENTER_X = 150;     // The x-position that represents the center of the camera's view
+const int TARGET_WIDTH = 115; // The object's width when it is close enough to grab
+const float Kp = 1;         // Proportional gain for turning control (used for feedback)
+const int MAX_SPEED = 255;    // Maximum motor speed
+const int MIN_SPEED = 50;     // Minimum motor speed (ensures the robot moves instead of stalling)
+const int FORWARD_SPEED = 255; // Speed for moving forward when approaching the object
 
 // Claw positions (in degrees)
 int clawOpenPosition   = 145;   
