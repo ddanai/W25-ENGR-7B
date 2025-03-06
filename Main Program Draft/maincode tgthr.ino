@@ -1,5 +1,6 @@
 #include "CytronMotorDriver.h"
 #include <Servo.h>
+#include <Pixy2.h>  // Allows communication with the Pixy2 camera
 
 // Configure the motor driver.
 const int sensor1Pin = 2;   // Sensor 1 input pin (left)
@@ -13,16 +14,12 @@ CytronMD motor2(PWM_DIR, 6, 7); // PWM 2 = Pin 6, DIR 2 = Pin 7
 Servo clawServo;
 Servo liftServo;
 
+// Create objects for Pixy2 camera 
+Pixy2 pixy;
+
+
 const int clawServoPin = 5; // claw servo input pin     
 const int liftServoPin = 6; // lift servo input pin         
-
-// Claw positions (in degrees)
-int clawOpenPosition   = 60;   
-int clawClosedPosition = 120;  
-
-// Lift positions (in degrees)
-int liftDownPosition   = 0;    
-int liftUpPosition     = 90;  
 
 int clawOpenPosition   = 145;   
 int clawClosedPosition = 35;  
@@ -57,12 +54,8 @@ void loop() {
     linetracking();
   break;
   Case 2: //color detecting 
-    colordetecting()
-  ;
+    colordetecting();
   break;
-  Case 3 //claw actuation
-    clawactuation()
-  ;
 }
 
 //motor 1 (left) negative is forwards
@@ -112,7 +105,6 @@ void colordetecing() {
           stopMotors();
           clawClose();
           clawRaise();
-          int var=3;
           } 
         
         } 
