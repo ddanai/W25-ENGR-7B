@@ -12,8 +12,8 @@ Pixy2 pixy;
 Servo claw;
 // Constants
 const int CENTER_X = 150;     // The x-position that represents the center of the camera's view
-const int TARGET_WIDTH = 115; // The object's width when it is close enough to grab
-const float Kp = 1;         // Proportional gain for turning control (used for feedback)
+const int TARGET_WIDTH = 105; // The object's width when it is close enough to grab
+const float Kp = 1.2;         // Proportional gain for turning control (used for feedback)
 const int MAX_SPEED = 255;    // Maximum motor speed
 const int MIN_SPEED = 50;     // Minimum motor speed (ensures the robot moves instead of stalling)
 const int FORWARD_SPEED = 255; // Speed for moving forward when approaching the object
@@ -35,15 +35,24 @@ void trackObject() {
       int object_x = pixy.ccc.blocks[0].m_x;
       int object_width = pixy.ccc.blocks[0].m_width;
       int error = object_x - CENTER_X;
-      int turn_speed = abs(error) * Kp;
+      int turn_speed = 200-abs(error) * Kp;
        // Constrain the turn speed between max and min speed
         turn_speed = constrain(turn_speed, MIN_SPEED, MAX_SPEED);
-        if (error > 15) {
+       if (error >= 75){
+        leftMotor.setSpeed(200);
+    rightMotor.setSpeed(-50);
+       }
+        else if (error > 20) {
           turnLeft(turn_speed);
         } 
-        else if (error < -15) {
+        else if (error < -20 && error>-75) {
           turnRight(turn_speed);
-        }
+         }
+          else if (error <=- 75){
+            leftMotor.setSpeed(50);
+    rightMotor.setSpeed(-200);
+          }
+        
         else{
           if (object_width < TARGET_WIDTH) {
           moveForward(FORWARD_SPEED);
@@ -76,14 +85,14 @@ void turnLeft(int speed) {
     // Positive to the left motor = forward
     // Positive to the right motor = backward
     leftMotor.setSpeed(speed);
-    rightMotor.setSpeed(-25);
+    rightMotor.setSpeed(-speed/2);
 }
 
 // Function to turn right
 void turnRight(int speed) {
     // Negative to the left motor = backward 
     // Negative to the right motor = forward
-    leftMotor.setSpeed(25);
+    leftMotor.setSpeed(speed/2);
     rightMotor.setSpeed(-speed);
 }
 
