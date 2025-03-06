@@ -30,9 +30,19 @@ void setup() {
   pinMode(sensor1Pin, INPUT);
   pinMode(sensor2Pin, INPUT);
 }
-
 void loop() {
-linetracking();
+  Switch(var){
+  Case 1: //line tracking 
+    linetracking()
+  ;
+  break;
+  Case 2: //color detecting 
+    colordetecting()
+  ;
+  break;
+  Case 3 //claw actuation
+    clawactuation()
+  ;
 }
 
 //motor 1 (left) negative is forwards
