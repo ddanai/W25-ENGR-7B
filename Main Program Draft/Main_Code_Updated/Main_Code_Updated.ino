@@ -18,7 +18,6 @@ const int clawServoPin = 10; // claw servo input pin
 const int liftServoPin = 9; // lift servo input pin         
 
 
-
 int clawOpenPosition   = 145;   
 int clawClosedPosition = 35;  
 // Lift positions (in degrees)
@@ -35,7 +34,7 @@ const int MIN_SPEED = 50;     // Minimum motor speed (ensures the robot moves in
 const int FORWARD_SPEED = 255; // Speed for moving forward when approaching the object
 
 
-
+//begin 
 int var=1;
 
 void setup() {
@@ -67,11 +66,6 @@ void loop() {
   }
 }
 
-
-
-
-
-
 //motor 1 (left) negative is forwards
 //motor 2 (right) positive is forwards
 void linetracking(){ 
@@ -82,21 +76,25 @@ void linetracking(){
     leftMotor.setSpeed(-170);  
     rightMotor.setSpeed(170);
   } else if (sensorLeftStatus == LOW && sensorRightStatus == HIGH) {
+    // right turn
     leftMotor.setSpeed(-255);
     rightMotor.setSpeed(10);
   } else if (sensorLeftStatus == HIGH && sensorRightStatus == LOW) {
+    // left turn
     leftMotor.setSpeed(-10);
     rightMotor.setSpeed(255);
   } else if (sensorLeftStatus == HIGH && sensorRightStatus == HIGH) {
+    // stop
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
+    // go to case 2 
     var=2;
   }
 }
 
 void colordetecting() {
     pixy.ccc.getBlocks();
-      // TODO: Check if an object is detected
+      // Check if an object is detected
     if (pixy.ccc.numBlocks > 0) {
       int object_x = pixy.ccc.blocks[0].m_x;
       int object_width = pixy.ccc.blocks[0].m_width;
@@ -125,6 +123,7 @@ void colordetecting() {
           else {
           //if object closer than target width stop motors 
           stopMotors();
+          // go to case 3
           var=3;
           } 
         
@@ -136,27 +135,21 @@ void colordetecting() {
     }
 }
 void moveForward(int speed) {
-    // Because the right motor is physically reversed on the rover:
-    //   - Left motor: positive = forward
-    //   - Right motor: positive = *reverse* from the robot's perspective
-    // To move forward, the right motor must be given a negative speed
+//reversed for color tracking so 
+//motor 1 (left) positive is forwards
+//motor 2 (right) negative is forwards
     leftMotor.setSpeed(speed);
     rightMotor.setSpeed(-speed);
 }
 
 // Function to turn left
 void turnLeft(int speed) {
-    // Hint says both motors move in the same direction to turn in place.
-    // Positive to the left motor = forward
-    // Positive to the right motor = backward
     leftMotor.setSpeed(speed);
     rightMotor.setSpeed(-25);
 }
 
 // Function to turn right
 void turnRight(int speed) {
-    // Negative to the left motor = backward 
-    // Negative to the right motor = forward
     leftMotor.setSpeed(25);
     rightMotor.setSpeed(-speed);
 }
@@ -166,28 +159,27 @@ void stopMotors() {
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
 }
-
+// Function to rotate motors
 void rotateMotors() {
     leftMotor.setSpeed(170);
     rightMotor.setSpeed(170);
 }
   
-
+// Function to close the claw
 void clawClose(){
       clawServo.write(clawClosedPosition);                   
 }
 
-
+// Function to lift the claw
 void clawRaise(){
       liftServo.write(liftUpPosition);              
 }
 
-
-
+// Function to open the clae
 void clawOpen(){
       clawServo.write(clawOpenPosition);     
 }         
-
+// Function to lower down the claw
 void clawLower(){
       liftServo.write(liftDownPosition);             
 }
