@@ -1,3 +1,8 @@
+//Limulidae 
+//Members : Isaac Lagunas, Renee Limonadi, Diego Martin, Darius Danai, Isabelle Yin, Victoria Chen, Jason Juarez
+//Last Edit: 3/18/25
+// This code controls our autonomous rover to follow a black line, detect an object, and then lift it up with our claw.
+// It operates in three different modes: line tracking, color detecting, and grabbing/lifting the object
 #include "CytronMotorDriver.h"
 #include <Servo.h>
 #include <Pixy2.h>  // Allows communication with the Pixy2 camera
@@ -75,15 +80,15 @@ void linetracking(){
   // Read sensor inputs
   int sensorLeftStatus = digitalRead(sensor1Pin);
   int sensorRightStatus = digitalRead(sensor2Pin);
+  // Value to adjust speed of turn
   int turn_adj = 5;
   int turnSpeed = 255;
   int speed=255;
   int KP=2.8;  
-  int t=0;
-  if (sensorLeftStatus == LOW && sensorRightStatus == LOW) {
+  if (sensorLeftStatus == LOW && sensorRightStatus == LOW) { // Both on white go straight
     leftMotor.setSpeed(-speed);  
     rightMotor.setSpeed(speed);
-  } else if (sensorLeftStatus == LOW && sensorRightStatus == HIGH) {
+  } else if (sensorLeftStatus == LOW && sensorRightStatus == HIGH) { //Right sensor on the line start slowing down the right motor
     leftMotor.setSpeed(-speed);
     rightMotor.setSpeed(turnSpeed);
      while (sensorLeftStatus == LOW){
@@ -94,14 +99,14 @@ void linetracking(){
      rightMotor.setSpeed(turnSpeed);
      delay(15);
        
-       if (digitalRead(sensor1Pin) == HIGH){
+       if (digitalRead(sensor1Pin) == HIGH){ // Stop turning when the left sensor detects the line
         turnSpeed=255;
         turn_adj=3;
         break;
        }
      }
 
-  } else if (sensorLeftStatus == HIGH && sensorRightStatus == LOW) {
+  } else if (sensorLeftStatus == HIGH && sensorRightStatus == LOW) { // Left sensor on the line start slowing down the left motor
     leftMotor.setSpeed(-turnSpeed);
     rightMotor.setSpeed(speed);
      while (sensorRightStatus == LOW){
@@ -111,13 +116,13 @@ void linetracking(){
      leftMotor.setSpeed(-turnSpeed);
      rightMotor.setSpeed(speed);
      delay(15);
-       if (digitalRead(sensor2Pin) == HIGH){
+       if (digitalRead(sensor2Pin) == HIGH){ // Stop turning when the right sensor detects the line
         turnSpeed=255;
         turn_adj=3;
         break;
        }
      }
-  } else if (sensorLeftStatus == HIGH && sensorRightStatus == HIGH) {
+  } else if (sensorLeftStatus == HIGH && sensorRightStatus == HIGH) { // Stop motors when both sensors detect black. Change cases.
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
     var=2;
@@ -126,7 +131,7 @@ void linetracking(){
 
 void colordetecting() {
     pixy.ccc.getBlocks();
-      // TODO: Check if an object is detected
+      // Check if an object is detected
     if (pixy.ccc.numBlocks > 0) {
       int object_x = pixy.ccc.blocks[0].m_x;
       int object_width = pixy.ccc.blocks[0].m_width;
@@ -153,7 +158,7 @@ void colordetecting() {
           moveForward(FORWARD_SPEED);
           } 
           else {
-          //if object closer than target width stop motors 
+          //if object closer than target width stop motors and change cases 
           stopMotors();
           var=3;
           } 
@@ -197,27 +202,28 @@ void stopMotors() {
     rightMotor.setSpeed(0);
 }
 
-void rotateMotors() {
+// Function to spin rover
+void rotateMotors() { 
     leftMotor.setSpeed(-255);
     rightMotor.setSpeed(-255);
 }
   
-
+// Function to close the claw
 void clawClose(){
       clawServo.write(clawClosedPosition);                   
 }
 
-
+// Function to lift the claw
 void clawRaise(){
       liftServo.write(liftUpPosition);              
 }
 
-
-
+// Function to open the claw
 void clawOpen(){
       clawServo.write(clawOpenPosition);     
 }         
 
+// Function to lower the claw
 void clawLower(){
       liftServo.write(liftDownPosition);             
 }
